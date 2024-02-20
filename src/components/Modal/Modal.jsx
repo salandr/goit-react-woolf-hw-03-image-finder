@@ -3,9 +3,13 @@ import { Component } from 'react';
 import { createPortal } from 'react-dom';
 import { Overlay, StyledModal } from './Modal.styled';
 
-const portalRef = document.getElementById('portal');
-
 class Modal extends Component {
+  constructor(props) {
+    super(props);
+    this.portalRef = document.createElement('div');
+    this.portalRef.setAttribute('id', 'portal');
+  }
+
   onEscButtonClose = e => {
     if (e.code === 'Escape') {
       this.props.closeModal();
@@ -19,10 +23,12 @@ class Modal extends Component {
   };
 
   componentDidMount() {
+    document.body.appendChild(this.portalRef);
     window.addEventListener('keydown', this.onEscButtonClose);
   }
 
   componentWillUnmount() {
+    document.body.removeChild(this.portalRef);
     window.removeEventListener('keydown', this.onEscButtonClose);
   }
 
@@ -34,7 +40,7 @@ class Modal extends Component {
           <img src={imgSrc} alt={label} />
         </StyledModal>
       </Overlay>,
-      portalRef
+      this.portalRef
     );
   }
 }
